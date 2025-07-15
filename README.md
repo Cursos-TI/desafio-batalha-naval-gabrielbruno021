@@ -1,103 +1,137 @@
-# ⚠️ Importante!!!
-Você pode escolher qualquer um dos desafios para desenvolver. Sinta-se à vontade para começar pelo desafio que mais lhe interessa.
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
-# Desafio Batalha Naval - Três Níveis de Complexidade
+// Tamanho do tabuleiro e quantidade de navios
+#define TAM 5
+#define NAVIOS 3
 
-Bem-vindo ao desafio "Batalha Naval"! Este projeto desafiará suas habilidades de programação utilizando vetores e matrizes para simular um jogo de Batalha Naval, dividido em três níveis: Novato, Aventureiro e Mestre. Em cada nível, novas funcionalidades serão adicionadas, tornando o desafio progressivamente mais complexo.
+// Fun��o que inicializa o tabuleiro com um s�mbolo (ex: '~')
+void inicializarTabuleiro(char tabuleiro[TAM][TAM], char simbolo) {
+    for (int i = 0; i < TAM; i++) {
+        for (int j = 0; j < TAM; j++) {
+            tabuleiro[i][j] = simbolo;
+        }
+    }
+}
 
-## 🏅 Nível Novato
+// Fun��o que exibe o tabuleiro na tela
+// Se ocultarNavios for 1, os navios 'N' n�o ser�o mostrados
+void exibirTabuleiro(char tabuleiro[TAM][TAM], int ocultarNavios) {
+    printf("  0 1 2 3 4\n");
+    for (int i = 0; i < TAM; i++) {
+        printf("%d ", i);
+        for (int j = 0; j < TAM; j++) {
+            if (ocultarNavios && tabuleiro[i][j] == 'N') {
+                printf("~ ");
+            } else {
+                printf("%c ", tabuleiro[i][j]);
+            }
+        }
+        printf("\n");
+    }
+}
 
-Neste nível inicial, você implementará a lógica básica de posicionamento de navios em um tabuleiro de Batalha Naval utilizando vetores bidimensionais.
+// Fun��o que posiciona os navios aleatoriamente no tabuleiro
+void posicionarNavios(char tabuleiro[TAM][TAM]) {
+    int colocados = 0;
+    while (colocados < NAVIOS) {
+        int x = rand() % TAM;
+        int y = rand() % TAM;
+        if (tabuleiro[x][y] != 'N') {
+            tabuleiro[x][y] = 'N';
+            colocados++;
+        }
+    }
+}
 
-### 🚩 Objetivos:
-- **Posicionamento dos Navios:** O sistema deve simular a localização de dois navios no tabuleiro, um posicionado verticalmente e outro horizontalmente.
-- **Utilização de Vetores:** Os navios serão posicionados utilizando vetores bidimensionais, com coordenadas X e Y.
-- **Exibição de Coordenadas:** O sistema deve exibir as coordenadas de cada parte dos navios no console utilizando `printf`.
+// Fun��o que processa um tiro no tabuleiro
+int atirar(int x, int y, char tabuleiro[TAM][TAM]) {
+    if (tabuleiro[x][y] == 'N') {
+        tabuleiro[x][y] = 'X'; // Acerto
+        return 1;
+    } else if (tabuleiro[x][y] == '~') {
+        tabuleiro[x][y] = 'O'; // Erro
+    }
+    return 0;
+}
 
-### 📥 Entrada de Dados:
-- Os valores serão inseridos manualmente por meio de variáveis no código.
+int main() {
+    char tabuleiroJogador[TAM][TAM];
+    char tabuleiroComputador[TAM][TAM];
+    int x, y;
+    int acertosJogador = 0, acertosComputador = 0;
 
-### 📤 Saída de Dados:
-- Após o posicionamento, o sistema deve exibir as coordenadas dos navios de forma clara e organizada.
+    // Semente para gerar n�meros aleat�rios
+    srand(time(NULL));
 
----
+    // Inicializa os tabuleiros
+    inicializarTabuleiro(tabuleiroJogador, '~');
+    inicializarTabuleiro(tabuleiroComputador, '~');
 
-## 🏅 Nível Aventureiro
+    // Posiciona os navios nos tabuleiros
+    printf("Posicionando navios...\n");
+    posicionarNavios(tabuleiroJogador);
+    posicionarNavios(tabuleiroComputador);
 
-No nível Aventureiro, você expandirá o tabuleiro e adicionará mais navios, incluindo posicionamentos na diagonal.
+    // Loop principal do jogo
+    while (acertosJogador < NAVIOS && acertosComputador < NAVIOS) {
+        // Exibe os tabuleiros
+        printf("\n--- Seu tabuleiro ---\n");
+        exibirTabuleiro(tabuleiroJogador, 0);
+        printf("\n--- Tabuleiro do computador ---\n");
+        exibirTabuleiro(tabuleiroComputador, 1);
 
-### 🆕 Diferença em relação ao Nível Novato:
-- **Tabuleiro 10x10:** O tabuleiro será expandido para uma matriz 10x10.
-- **Posicionamento de Quatro Navios:** O sistema deverá posicionar quatro navios, incluindo dois na diagonal.
-- **Exibição Completa do Tabuleiro:** O sistema exibirá toda a matriz, onde 0 indica uma posição sem navio e 3 indica uma posição ocupada.
+        // Jogador atira
+        printf("\nSua vez! Digite as coordenadas (linha e coluna): ");
+        scanf("%d %d", &x, &y);
 
-### 🚩 Novas Funcionalidades:
-- **Matriz 10x10:** Implementação de uma matriz maior para representar o tabuleiro.
-- **Posicionamento de Navios na Diagonal:** Adição de navios posicionados diagonalmente.
-- **Exibição do Tabuleiro Completo:** O sistema mostrará o tabuleiro completo, indicando as posições ocupadas e livres.
+        if (x < 0 || x >= TAM || y < 0 || y >= TAM) {
+            printf("Coordenadas inv�lidas. Tente novamente.\n");
+            continue;
+        }
 
----
+        if (tabuleiroComputador[x][y] == 'X' || tabuleiroComputador[x][y] == 'O') {
+            printf("Voc� j� atirou aqui. Escolha outra posi��o.\n");
+            continue;
+        }
 
-## 🏅 Nível Mestre
+        if (atirar(x, y, tabuleiroComputador)) {
+            printf("?? Voc� acertou um navio!\n");
+            acertosJogador++;
+        } else {
+            printf("?? Voc� errou o tiro.\n");
+        }
 
-No nível Mestre, o desafio se intensifica com a implementação de habilidades especiais representadas por matrizes específicas no tabuleiro.
+        // Verifica se o jogador venceu
+        if (acertosJogador == NAVIOS) break;
 
-### 🆕 Diferença em relação ao Nível Aventureiro:
-- **Habilidades Especiais:** O sistema deve definir áreas de habilidades utilizando matrizes com padrões específicos: cone, cruz e octaedro.
-- **Estruturas de Repetição Aninhadas:** Utilização de loops aninhados para percorrer e preencher as áreas afetadas pelas habilidades.
+        // Vez do computador
+        printf("\nAgora � a vez do computador...\n");
+        do {
+            x = rand() % TAM;
+            y = rand() % TAM;
+        } while (tabuleiroJogador[x][y] == 'X' || tabuleiroJogador[x][y] == 'O');
 
-### 🚩 Novas Funcionalidades:
-- **Matrizes de Habilidades:** Implementação de três matrizes para representar habilidades especiais no tabuleiro.
-- **Padrões de Habilidade:** Criação de padrões específicos (cone, cruz, octaedro) para definir as áreas afetadas.
-- **Exibição das Áreas Atingidas:** O sistema exibirá o tabuleiro com as áreas afetadas, utilizando 0 para áreas não afetadas e 1 para áreas afetadas.
+        if (atirar(x, y, tabuleiroJogador)) {
+            printf("?? O computador acertou na posi��o (%d, %d)!\n", x, y);
+            acertosComputador++;
+        } else {
+            printf("?? O computador errou na posi��o (%d, %d).\n", x, y);
+        }
+    }
 
-### Exemplo de Saída:
+    // Fim do jogo
+    printf("\n--- Fim de Jogo ---\n");
+    if (acertosJogador == NAVIOS) {
+        printf("?? Parab�ns! Voc� venceu!\n");
+    } else {
+        printf("?? O computador venceu! Tente novamente.\n");
+    }
 
-Exemplo e comando:
-printf("%d ",matriz[i][j]);
+    // Exibe o tabuleiro final do computador (sem esconder navios)
+    printf("\nTabuleiro final do computador:\n");
+    exibirTabuleiro(tabuleiroComputador, 0);
 
-### Exemplo de saída de habilidade em cone:
-
-0 0 1 0 0
-
-0 1 1 1 0
-
-1 1 1 1 1
-
-### Exemplo de saída de habilidade em octaedro:
-
-0 0 1 0 0
-
-0 1 1 1 0
-
-0 0 1 0 0
-
-### Exemplo de saída de habilidade em cruz:
-
-0 0 1 0 0
-
-1 1 1 1 1
-
-0 0 1 0 0
-
-
-
-
-
----
-
-## 📋 Requisitos Funcionais Comuns
-- **Entrada de Dados:** Os valores serão inseridos manualmente por meio de variáveis no código.
-- **Utilização de Matrizes:** Os dados devem ser estruturados de maneira eficiente utilizando matrizes.
-- **Exibição de Resultados:** Os resultados devem ser exibidos de forma clara e organizada.
-
-## 📌 Requisitos Não Funcionais Comuns
-- **Performance:** O sistema deve executar operações de forma eficiente, sem atrasos perceptíveis.
-- **Documentação:** O código deve ser bem documentado, com comentários claros sobre a função de cada parte do código.
-- **Manutenibilidade:** O código deve ser organizado e fácil de entender, facilitando futuras manutenções e expansões.
-
----
-
-Boa sorte no desenvolvimento deste desafio! Aproveite para aprimorar suas habilidades em vetores e matrizes enquanto progride pelos níveis.
-
-Equipe de Ensino - MateCheck
+    return 0;
+}
