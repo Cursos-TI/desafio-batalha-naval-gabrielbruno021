@@ -1,137 +1,104 @@
-#include <stdio.h>
+  #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 
-// Tamanho do tabuleiro e quantidade de navios
-#define TAM 5
-#define NAVIOS 3
-
-// Função que inicializa o tabuleiro com um símbolo (ex: '~')
-void inicializarTabuleiro(char tabuleiro[TAM][TAM], char simbolo) {
-    for (int i = 0; i < TAM; i++) {
-        for (int j = 0; j < TAM; j++) {
-            tabuleiro[i][j] = simbolo;
-        }
-    }
-}
-
-// Função que exibe o tabuleiro na tela
-// Se ocultarNavios for 1, os navios 'N' não serão mostrados
-void exibirTabuleiro(char tabuleiro[TAM][TAM], int ocultarNavios) {
-    printf("  0 1 2 3 4\n");
-    for (int i = 0; i < TAM; i++) {
-        printf("%d ", i);
-        for (int j = 0; j < TAM; j++) {
-            if (ocultarNavios && tabuleiro[i][j] == 'N') {
-                printf("~ ");
-            } else {
-                printf("%c ", tabuleiro[i][j]);
-            }
+// FunÃ§Ã£o para imprimir uma matriz genÃ©rica
+void imprimirMatriz(int linhas, int colunas, int matriz[linhas][colunas]) {
+    for (int i = 0; i < linhas; i++) {
+        for (int j = 0; j < colunas; j++) {
+            printf("%d ", matriz[i][j]);
         }
         printf("\n");
     }
 }
 
-// Função que posiciona os navios aleatoriamente no tabuleiro
-void posicionarNavios(char tabuleiro[TAM][TAM]) {
-    int colocados = 0;
-    while (colocados < NAVIOS) {
-        int x = rand() % TAM;
-        int y = rand() % TAM;
-        if (tabuleiro[x][y] != 'N') {
-            tabuleiro[x][y] = 'N';
-            colocados++;
-        }
-    }
-}
+ // ========================
+    // NÃ­vel Novato
+    // ========================
+    printf("NÃ­vel Novato - Tabuleiro 5x5 com dois navios\n");
 
-// Função que processa um tiro no tabuleiro
-int atirar(int x, int y, char tabuleiro[TAM][TAM]) {
-    if (tabuleiro[x][y] == 'N') {
-        tabuleiro[x][y] = 'X'; // Acerto
-        return 1;
-    } else if (tabuleiro[x][y] == '~') {
-        tabuleiro[x][y] = 'O'; // Erro
-    }
-    return 0;
-}
+    int novato[5][5] = {0};
 
-int main() {
-    char tabuleiroJogador[TAM][TAM];
-    char tabuleiroComputador[TAM][TAM];
-    int x, y;
-    int acertosJogador = 0, acertosComputador = 0;
-
-    // Semente para gerar números aleatórios
-    srand(time(NULL));
-
-    // Inicializa os tabuleiros
-    inicializarTabuleiro(tabuleiroJogador, '~');
-    inicializarTabuleiro(tabuleiroComputador, '~');
-
-    // Posiciona os navios nos tabuleiros
-    printf("Posicionando navios...\n");
-    posicionarNavios(tabuleiroJogador);
-    posicionarNavios(tabuleiroComputador);
-
-    // Loop principal do jogo
-    while (acertosJogador < NAVIOS && acertosComputador < NAVIOS) {
-        // Exibe os tabuleiros
-        printf("\n--- Seu tabuleiro ---\n");
-        exibirTabuleiro(tabuleiroJogador, 0);
-        printf("\n--- Tabuleiro do computador ---\n");
-        exibirTabuleiro(tabuleiroComputador, 1);
-
-        // Jogador atira
-        printf("\nSua vez! Digite as coordenadas (linha e coluna): ");
-        scanf("%d %d", &x, &y);
-
-        if (x < 0 || x >= TAM || y < 0 || y >= TAM) {
-            printf("Coordenadas inválidas. Tente novamente.\n");
-            continue;
-        }
-
-        if (tabuleiroComputador[x][y] == 'X' || tabuleiroComputador[x][y] == 'O') {
-            printf("Você já atirou aqui. Escolha outra posição.\n");
-            continue;
-        }
-
-        if (atirar(x, y, tabuleiroComputador)) {
-            printf("?? Você acertou um navio!\n");
-            acertosJogador++;
-        } else {
-            printf("?? Você errou o tiro.\n");
-        }
-
-        // Verifica se o jogador venceu
-        if (acertosJogador == NAVIOS) break;
-
-        // Vez do computador
-        printf("\nAgora é a vez do computador...\n");
-        do {
-            x = rand() % TAM;
-            y = rand() % TAM;
-        } while (tabuleiroJogador[x][y] == 'X' || tabuleiroJogador[x][y] == 'O');
-
-        if (atirar(x, y, tabuleiroJogador)) {
-            printf("?? O computador acertou na posição (%d, %d)!\n", x, y);
-            acertosComputador++;
-        } else {
-            printf("?? O computador errou na posição (%d, %d).\n", x, y);
-        }
+    // Navio 1 - vertical na coluna 1 (linha 0 a 2)
+    for (int i = 0; i < 3; i++) {
+        novato[i][1] = 3;
+        printf("Navio vertical em (%d,1)\n", i);
     }
 
-    // Fim do jogo
-    printf("\n--- Fim de Jogo ---\n");
-    if (acertosJogador == NAVIOS) {
-        printf("?? Parabéns! Você venceu!\n");
-    } else {
-        printf("?? O computador venceu! Tente novamente.\n");
+    // Navio 2 - horizontal na linha 4 (coluna 0 a 3)
+    for (int j = 0; j < 4; j++) {
+        novato[4][j] = 3;
+        printf("Navio horizontal em (4,%d)\n", j);
     }
 
-    // Exibe o tabuleiro final do computador (sem esconder navios)
-    printf("\nTabuleiro final do computador:\n");
-    exibirTabuleiro(tabuleiroComputador, 0);
+    printf("\nTabuleiro Novato:\n");
+    imprimirMatriz(5, 5, novato);
+
+
+    // ========================
+    // NÃ­vel Aventureiro
+    // ========================
+    printf("\nNÃ­vel Aventureiro - Tabuleiro 10x10 com 4 navios\n");
+
+    int aventureiro[10][10] = {0};
+
+    // Navio 1 - horizontal na linha 2 (coluna 1 a 4)
+    for (int j = 1; j <= 4; j++) {
+        aventureiro[2][j] = 3;
+    }
+
+    // Navio 2 - vertical na coluna 6 (linha 5 a 8)
+    for (int i = 5; i <= 8; i++) {
+        aventureiro[i][6] = 3;
+    }
+
+    // Navio 3 - diagonal principal (linha == coluna)
+    for (int i = 0; i < 4; i++) {
+        aventureiro[i][i] = 3;
+    }
+
+    // Navio 4 - diagonal secundÃ¡ria (linha + coluna == 9)
+    for (int i = 0; i < 4; i++) {
+        aventureiro[i][9 - i] = 3;
+    }
+
+    printf("\nTabuleiro Aventureiro:\n");
+    imprimirMatriz(10, 10, aventureiro);
+
+
+    // ========================
+    // NÃ­vel Mestre
+    // ========================
+    printf("\nNÃ­vel Mestre - Habilidades Especiais\n");
+
+    // Habilidade: Cone
+    int cone[3][5] = {0};
+    for (int i = 0; i < 3; i++) {
+        for (int j = 2 - i; j <= 2 + i; j++) {
+            cone[i][j] = 1;
+        }
+    }
+    printf("\nCone:\n");
+    imprimirMatriz(3, 5, cone);
+
+    // Habilidade: Cruz
+    int cruz[3][5] = {0};
+    for (int i = 0; i < 3; i++) cruz[i][2] = 1;
+    for (int j = 0; j < 5; j++) cruz[1][j] = 1;
+    printf("\nCruz:\n");
+    imprimirMatriz(3, 5, cruz);
+
+    // Habilidade: Octaedro
+    int octaedro[3][5] = {0};
+    int cx = 1, cy = 2; // centro da forma
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 5; j++) {
+            if (abs(i - cx) + abs(j - cy) <= 1) {
+                octaedro[i][j] = 1;
+            }
+        }
+    }
+    printf("\nOctaedro:\n");
+    imprimirMatriz(3, 5, octaedro);
 
     return 0;
 }
