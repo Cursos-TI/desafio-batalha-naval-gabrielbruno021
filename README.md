@@ -1,137 +1,73 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
+Desafio Super Trunfo - Países - Cadastro das Cartas
+Bem-vindo ao desafio "Super Trunfo - Países"! No jogo Super Trunfo, os jogadores comparam os atributos das cartas para determinar a mais forte. O tema deste Super Trunfo é "Países", onde você comparará os atributos das cidades.
 
-// Tamanho do tabuleiro e quantidade de navios
-#define TAM 5
-#define NAVIOS 3
+A empresa MateCheck contratou você para desenvolver a parte inicial do jogo, que consiste no cadastro das cartas.
 
-// Fun��o que inicializa o tabuleiro com um s�mbolo (ex: '~')
-void inicializarTabuleiro(char tabuleiro[TAM][TAM], char simbolo) {
-    for (int i = 0; i < TAM; i++) {
-        for (int j = 0; j < TAM; j++) {
-            tabuleiro[i][j] = simbolo;
-        }
-    }
-}
+O desafio está dividido em três níveis: Novato, Aventureiro e Mestre, com cada nível adicionando mais complexidade ao anterior. Você deve escolher qual desafio quer realizar.
 
-// Fun��o que exibe o tabuleiro na tela
-// Se ocultarNavios for 1, os navios 'N' n�o ser�o mostrados
-void exibirTabuleiro(char tabuleiro[TAM][TAM], int ocultarNavios) {
-    printf("  0 1 2 3 4\n");
-    for (int i = 0; i < TAM; i++) {
-        printf("%d ", i);
-        for (int j = 0; j < TAM; j++) {
-            if (ocultarNavios && tabuleiro[i][j] == 'N') {
-                printf("~ ");
-            } else {
-                printf("%c ", tabuleiro[i][j]);
-            }
-        }
-        printf("\n");
-    }
-}
+🚨 Atenção: O nível Novato do desafio é focado apenas no cadastro das cartas, utilizando as funções para ler os dados e para exibi-los.scanfprintf
 
-// Fun��o que posiciona os navios aleatoriamente no tabuleiro
-void posicionarNavios(char tabuleiro[TAM][TAM]) {
-    int colocados = 0;
-    while (colocados < NAVIOS) {
-        int x = rand() % TAM;
-        int y = rand() % TAM;
-        if (tabuleiro[x][y] != 'N') {
-            tabuleiro[x][y] = 'N';
-            colocados++;
-        }
-    }
-}
+🎮 Nível Novato: Cadastro Básico
+No nível Novato, você iniciará criando o sistema básico do jogo Super Trunfo com o tema "Países". As cartas serão divididas por estados, cada um com quatro cidades. Imagine um país dividido em oito estados (A a H), e cada estado com quatro cidades (1 a 4). A combinação forma o código da carta (ex: A01, B02).
 
-// Fun��o que processa um tiro no tabuleiro
-int atirar(int x, int y, char tabuleiro[TAM][TAM]) {
-    if (tabuleiro[x][y] == 'N') {
-        tabuleiro[x][y] = 'X'; // Acerto
-        return 1;
-    } else if (tabuleiro[x][y] == '~') {
-        tabuleiro[x][y] = 'O'; // Erro
-    }
-    return 0;
-}
+🚩 Objetivo: Criar um programa em C que cadastra duas cartas com os seguintes atributos:
 
-int main() {
-    char tabuleiroJogador[TAM][TAM];
-    char tabuleiroComputador[TAM][TAM];
-    int x, y;
-    int acertosJogador = 0, acertosComputador = 0;
+População (int)
+Área (float)
+PIB (float)
+Número de pontos turísticos (int)
+⚙ Funcionalidades do Sistema:
 
-    // Semente para gerar n�meros aleat�rios
-    srand(time(NULL));
+O sistema permitirá ao usuário cadastrar os dados de duas cartas manualmente via terminal.
+Após o cadastro, o sistema exibirá os dados de cada cidade de forma organizada.
+📥 Entrada e 📤 Saída de Dados:
 
-    // Inicializa os tabuleiros
-    inicializarTabuleiro(tabuleiroJogador, '~');
-    inicializarTabuleiro(tabuleiroComputador, '~');
+O usuário insere os dados de cada carta interativamente via .scanf
+O programa exibe os dados cadastrados usando , com cada atributo em uma nova linha.printf
+Simplificações para o Nível Novato:
 
-    // Posiciona os navios nos tabuleiros
-    printf("Posicionando navios...\n");
-    posicionarNavios(tabuleiroJogador);
-    posicionarNavios(tabuleiroComputador);
+Cadastre apenas duas cartas.
+Concentre-se na leitura, armazenamento e exibição. Não implemente comparações ou outros recursos.
+Não use laços (, ) ou condicionais (, ).forwhileifelse
+🛡 Nível Aventureiro: Cálculo de Atributos
+No nível Aventureiro, você expandirá o sistema para incluir o cálculo de dois novos atributos: Densidade Populacional e PIB per Capita.
 
-    // Loop principal do jogo
-    while (acertosJogador < NAVIOS && acertosComputador < NAVIOS) {
-        // Exibe os tabuleiros
-        printf("\n--- Seu tabuleiro ---\n");
-        exibirTabuleiro(tabuleiroJogador, 0);
-        printf("\n--- Tabuleiro do computador ---\n");
-        exibirTabuleiro(tabuleiroComputador, 1);
+🆕 Diferença em relação ao Nível Novato:
 
-        // Jogador atira
-        printf("\nSua vez! Digite as coordenadas (linha e coluna): ");
-        scanf("%d %d", &x, &y);
+Novos Atributos:
+Densidade Populacional: População / Área (float)
+PIB per Capita: PIB / População (float)
+⚙ Funcionalidades do Sistema:
 
-        if (x < 0 || x >= TAM || y < 0 || y >= TAM) {
-            printf("Coordenadas inv�lidas. Tente novamente.\n");
-            continue;
-        }
+O sistema calculará automaticamente a Densidade Populacional e o PIB per Capita.
+Os novos atributos serão exibidos junto com os demais.
+📥 Entrada e 📤 Saída de Dados:
 
-        if (tabuleiroComputador[x][y] == 'X' || tabuleiroComputador[x][y] == 'O') {
-            printf("Voc� j� atirou aqui. Escolha outra posi��o.\n");
-            continue;
-        }
+Mesma entrada do nível Novato.
+A saída exibirá também os atributos calculados.
+Simplificações para o Nível Intermediário:
 
-        if (atirar(x, y, tabuleiroComputador)) {
-            printf("?? Voc� acertou um navio!\n");
-            acertosJogador++;
-        } else {
-            printf("?? Voc� errou o tiro.\n");
-        }
+Continue cadastrando apenas duas cartas.
+Continue sem usar laços (, ) ou condicionais (, ).forwhileifelse
+🏆 Nível Mestre: Comparação e Super Poder
+No nível Mestre, você implementará a comparação entre duas cartas e o cálculo do "Super Poder".
 
-        // Verifica se o jogador venceu
-        if (acertosJogador == NAVIOS) break;
+🆕 Diferença em relação ao Nível Aventureiro:
 
-        // Vez do computador
-        printf("\nAgora � a vez do computador...\n");
-        do {
-            x = rand() % TAM;
-            y = rand() % TAM;
-        } while (tabuleiroJogador[x][y] == 'X' || tabuleiroJogador[x][y] == 'O');
+Comparação de Cartas: O usuário poderá comparar as duas cartas.
+Super Poder: Soma de todos os atributos (inclusive os calculados), com a densidade populacional invertida antes da soma (1/densidade). Tipo: .float
+⚙ Funcionalidades do Sistema:
 
-        if (atirar(x, y, tabuleiroJogador)) {
-            printf("?? O computador acertou na posi��o (%d, %d)!\n", x, y);
-            acertosComputador++;
-        } else {
-            printf("?? O computador errou na posi��o (%d, %d).\n", x, y);
-        }
-    }
+Comparação atributo a atributo, mostrando qual carta venceu (1 se a Carta 1 vence, 0 se a Carta 2 vence).
+Para Densidade Populacional, vence a carta com o menor valor.
+Para os demais atributos (e o Super Poder), vence a carta com o maior valor.
+📥 Entrada e 📤 Saída de Dados:
 
-    // Fim do jogo
-    printf("\n--- Fim de Jogo ---\n");
-    if (acertosJogador == NAVIOS) {
-        printf("?? Parab�ns! Voc� venceu!\n");
-    } else {
-        printf("?? O computador venceu! Tente novamente.\n");
-    }
+Mesma entrada dos níveis anteriores, mas a População agora é .unsigned long int
+A saída mostrará o resultado da comparação para cada atributo e o Super Poder.
+Observação: Preste atenção à conversão de tipos ao calcular o Super Poder!
 
-    // Exibe o tabuleiro final do computador (sem esconder navios)
-    printf("\nTabuleiro final do computador:\n");
-    exibirTabuleiro(tabuleiroComputador, 0);
+🏁 Conclusão
+Ao concluir qualquer um dos níveis, você terá dado um passo importante no desenvolvimento do Super Trunfo - Países. Boa sorte e divirta-se programando!
 
-    return 0;
-}
+Equipe de Ensino - MateCheck content_copy
